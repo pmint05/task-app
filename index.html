@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Todo App | Mr_Pmint</title>
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+	<link rel="icon" type="image/png" href="favicon.png"/>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
+	<link rel="stylesheet" href="./style.css">
+	<link rel="stylesheet" href="./ripple.css">
+</head>
+
+<body onload="startTime()">
+<!-- partial:index.partial.html -->
+
+<div class="app">
+	<div class="cursor"></div>
+	<div class="confirm-wrapper">
+		<div class="overlay"></div>
+		<div class="confirm">
+			<div class="confirm-icon"><i class="fad fa-exclamation-circle"></i></div>
+			<div class="content">
+				<p>Are you sure you want to delete all tasks ?</p>
+			</div>
+			<div class="btn-wrap">
+				<button data-ripple value="Yes" class="yes">Yes, i'm sure!</button>
+				<button data-ripple value="No" class="no">No, keep them!</button>
+			</div>
+		</div>
+	</div>
+	<div class="header">
+		<h1>Todo App</h1>
+		<div class="date">
+			<h1 id="clock">Now: 00:00:00</h1>
+			<h2 id="date">00/00/0000</h2>
+		</div>	
+		
+		<h1 id="credit"><a href="https://fb.com/pmint05" target="_blank">Pmint05</a></h1>
+	</div>
+	<!-- <div class="filter">
+		<div data-ripple class="select">
+			<select name="tasks" class="filter-tasks">
+				<option value="completed">Completed</option>
+				<option value="uncompleted">Uncompleted</option>
+				<option value="uncompleted">Priority</option>
+				<option value="uncompleted">Time</option>
+			</select>
+		</div>
+		
+	</div> -->
+	<div class="footer-btn">
+		<button data-ripple class="remove-all-tasks" title="Delete All Tasks"><i class="fad fa-trash"></i></button>
+		<button data-ripple class="home-page" title="Go to my portfolio site :3"><i class="fad fa-home-heart"><a href="#" target="_blank" rel="noopener noreferrer"></a></i></button>
+
+	</div>
+	
+	<input id="ipt-toggle-modal" type="checkbox"></input>
+
+	<label data-ripple class="btn-toggle-modal" for="ipt-toggle-modal" title="Add Tasks"><i class="fas fa-plus"></i></label>
+
+	<div class="notification">Task edited successfully</div>
+	
+	<div class="non-task-noti" style="display: none;">There are no tasks here<br>Click plus (+) button to create one<br><br>(￣ω￣)</div>
+
+	<ul class="tasks">
+		<div class="task task-noti" id="-1">
+			<div class="task-header admin">
+				<div class="left-side admin">
+					<i class="fad fa-fire-alt" data-priority="high"></i><span class="task-title">Todo Applicatio by <a href="https://fb.com/pmint05" target="_blank">Pmint</a></span>
+				</div>
+				<div class="right-side">
+					<div class="btn-remove-task" title="Remove task" onclick="removeTask(event, this)">
+						<i class="fad fa-trash"></i>
+					</div>
+				</div>
+			</div>
+			<div class="task-body"><span class="task-description">Thanks for using my app ❤.<br>How to use it ?<br>Oh, you just click plus (+) button and add anything that you need to do.<br>Have a nice day !!</span></div>
+			<div class="task-footer"><span class="task-status"></span><span class="task-timestamp"></span></div>
+		</div>
+	</ul>
+
+
+	<div class="overlay">
+		<p>Add task</p><span>Fill at least the title of the task, description is not required 😃</span>
+		<form class="modal">
+			<label for="task-title">Title</label>
+			<input id="task-title" type="text" autocomplete="off" placeholder="Aa"/>
+			<label for="task-desc">Description</label>
+			<textarea id="task-desc" rows="3" placeholder="(Optional)"></textarea><span>Priority</span>
+			<div class="priority">
+				<div class="radio">
+					<input id="high" type="radio" name="priority" value="high"/>
+					<label for="high">High</label>
+				</div>
+				<div class="radio">
+					<input id="medium" type="radio" name="priority" value="medium" checked="checked"/>
+					<label for="medium">Medium</label>
+				</div>
+				<div class="radio">
+					<input id="low" type="radio" name="priority" value="low"/>
+					<label for="low">Low</label>
+				</div>
+				
+			</div>
+			<div class="modal-btns">
+				<button data-ripple class="btn-add-task">Add</button>
+				<div data-ripple class="btn-cancel-task">Cancel</div>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- partial -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tinysort/3.2.5/tinysort.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="jquery.ui.touch-punch.min.js"></script>
+	<script src='https://unpkg.com/ionicons@4.5.5/dist/ionicons.js'></script>
+	<script src='https://momentjs.com/downloads/moment-with-locales.min.js'></script>
+	<!-- <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script> -->
+	<script  src="./script.js"></script>
+	<script  src="./ripple.js"></script>
+	
+	<script type="text/javascript">
+		var today = new Date();
+		var dd = String(today.getDate()).padStart(2, '0');
+		var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+		var yyyy = today.getFullYear();
+		
+		function startTime() {
+			var today = new Date();
+			var h = today.getHours();
+			var m = today.getMinutes();
+			var s = today.getSeconds();
+			m = checkTime(m);
+			s = checkTime(s);
+			document.getElementById('clock').innerHTML = "Now: " + h + ":" + m + ":" + s;
+			var t = setTimeout(startTime, 500);
+		};
+		function checkTime(i) {
+			if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+			return i;
+		}
+
+		today = dd + '/' + mm + '/' + yyyy;
+		document.querySelector(".task-noti .task-timestamp").innerText = 'By Admin - ' + today;
+		document.querySelector(".date #date").innerText = today;
+		
+
+	</script>
+
+
+
+<!--  _____________________________________ 
+< Code trông chán đời các bác nhể =)) >
+ ------------------------------------- 
+    \                                  ___-------___
+     \                             _-~~             ~~-_
+      \                         _-~                    /~-_
+             /^\__/^\         /~  \                   /    \
+           /|  O|| O|        /      \_______________/        \
+          | |___||__|      /       /                \          \
+          |          \    /      /                    \          \
+          |   (_______) /______/                        \_________ \
+          |         / /         \                      /            \
+           \         \^\\         \                  /               \     /
+             \         ||           \______________/      _-_       //\__//
+               \       ||------_-~~-_ ------------- \ --/~   ~\    || __/
+                 ~-----||====/~     |==================|       |/~~~~~
+                  (_(__/  ./     /                    \_\      \.
+                         (_(___/                         \_____)_) -->
+
+
+</body>
+</html>
